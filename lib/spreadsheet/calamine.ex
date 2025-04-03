@@ -7,7 +7,7 @@ defmodule Spreadsheet.Calamine do
     otp_app: :spreadsheet,
     crate: "spreadsheet",
     base_url:
-      "https://github.com/wkirschbaum/ex_spreadsheet/releases/download/v0.1.0",
+      "https://github.com/wkirschbaum/ex_spreadsheet/releases/download/v#{version}",
     version: version
 
   def sheet_names_from_binary(_content),
