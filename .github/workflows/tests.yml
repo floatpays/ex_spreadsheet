@@ -1,0 +1,53 @@
+---
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+      - release/*
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  tests:
+    env:
+      MIX_ENV: test
+      MJML_BUILD: true
+    runs-on: ubuntu-latest
+    name: "[${{matrix.otp}}/${{matrix.elixir}}] Tests on mjml_nif [OTP/Elixir]"
+    strategy:
+      fail-fast: false
+      # For compatibility between Elixir & Erlang/OTP see
+      # https://hexdocs.pm/elixir/compatibility-and-deprecations.html#compatibility-between-elixir-and-erlang-otp
+      matrix:
+        otp: [26.2, 27.3]
+        elixir: [1.18.3]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+      - name: Cache hex deps
+        id: mix-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            _build
+            !_build/*/lib/mjml
+          key: ${{ runner.os }}[${{ matrix.otp }}/${{ matrix.elixir }}]-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+      - run: mix deps.get
+      - run: mix deps.compile
+      - run: mix compile --warnings-as-errors
+        env:
+          RUST_BACKTRACE: 1
+      - run: mix test
