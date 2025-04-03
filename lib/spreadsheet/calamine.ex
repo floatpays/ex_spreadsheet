@@ -6,6 +6,8 @@ defmodule Spreadsheet.Calamine do
   version = config[:version]
   github_url = config[:package][:links]["GitHub"]
 
+  # These targets and nif versions should correspond to the
+  # .github/workflows/release.yml file.
   targets = ~w(
     aarch64-apple-darwin
     aarch64-unknown-linux-gnu
