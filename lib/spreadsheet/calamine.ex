@@ -1,13 +1,14 @@
 defmodule Spreadsheet.Calamine do
   @moduledoc false
 
+  version = Mix.Project.config()[:version]
+
   use RustlerPrecompiled,
     otp_app: :spreadsheet,
     crate: "spreadsheet",
     base_url:
       "https://github.com/wkirschbaum/ex_spreadsheet/releases/download/v0.1.0",
-    version: "0.1.0",
-    nif_versions: ["2.17"]
+    version: version
 
   def sheet_names_from_binary(_content),
     do: :erlang.nif_error(:nif_not_loaded)
