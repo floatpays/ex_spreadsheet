@@ -4,7 +4,7 @@ defmodule Spreadsheet.Calamine do
   config = Mix.Project.config()
 
   version = config[:version]
-  github_url = config[:github_url]
+  github_url = config[:package][:links]["GitHub"]
 
   use RustlerPrecompiled,
     otp_app: :spreadsheet,
