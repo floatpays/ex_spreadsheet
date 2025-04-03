@@ -54,6 +54,6 @@ defmodule Spreadsheet.MixProject do
   end
 
   defp description do
-    "Parses spreadsheet data using the Calamine via a Rustler NIF."
+    "Parses spreadsheet data using Calamine via a Rustler NIF."
   end
 end
