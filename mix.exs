@@ -37,7 +37,6 @@ defmodule Spreadsheet.MixProject do
 
   defp package do
     [
-      organization: "floatpays",
       files: [
         "lib",
         "mix.exs",
