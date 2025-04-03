@@ -1,6 +1,6 @@
 # Spreadsheet
 
-**TODO: Add description**
+Native Implementation Function ( NIF ) bindings for ([Calamine](https://docs.rs/calamine/latest/calamine/)) to read Excel and OpenDocument Spreadsheet files.
 
 ## Installation
 
@@ -15,9 +15,12 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/xlsx>.
+By default **you don't need Rust installed** because the lib will try to download
+a precompiled NIF file. In case you want to force compilation set the
+application env in order to force the build:
+
+```elixir
+config :rustler_precompiled, :force_build, spreadsheet: true
 
 ## Development
 
@@ -34,3 +37,11 @@ As per instruction: https://hexdocs.pm/rustler_precompiled/precompilation_guide.
 
     mix rustler_precompiled.download SpreadSheet.Calamine --all
 
+
+
+## Copyright and License
+
+Copyright (c) 2025 Wilhelm H Kirschbaum
+
+This work is free. You can redistribute it and/or modify it under the
+terms of the MIT License. See the [LICENSE.md](./LICENSE.md) file for more details.
