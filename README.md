@@ -21,6 +21,7 @@ application env in order to force the build:
 
 ```elixir
 config :rustler_precompiled, :force_build, spreadsheet: true
+```
 
 ## Development
 
