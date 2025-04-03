@@ -1,13 +1,15 @@
 defmodule Spreadsheet.Calamine do
   @moduledoc false
 
-  version = Mix.Project.config()[:version]
+  config = Mix.Project.config()
+
+  version = config[:version]
+  github_url = config[:github_url]
 
   use RustlerPrecompiled,
     otp_app: :spreadsheet,
     crate: "spreadsheet",
-    base_url:
-      "https://github.com/wkirschbaum/ex_spreadsheet/releases/download/v#{version}",
+    base_url: "#{github_url}/releases/download/v#{version}",
     version: version
 
   def sheet_names_from_binary(_content),

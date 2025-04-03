@@ -1,10 +1,13 @@
 defmodule Spreadsheet.MixProject do
   use Mix.Project
 
+  @github_url "https://github.com/wkirschbaum/ex_spreadsheet"
+  @version "0.1.0"
+
   def project do
     [
       app: :spreadsheet,
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
       description: description(),
@@ -23,7 +26,7 @@ defmodule Spreadsheet.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:rustler_precompiled, "~> 0.8"},
+      {:rustler_precompiled, "~> 0.8.1"},
       {:rustler, "~> 0.36.1", runtime: false, optional: true},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:igniter, "~> 0.5", only: [:dev, :test]},
@@ -47,7 +50,7 @@ defmodule Spreadsheet.MixProject do
       ],
       maintainers: ["Wilhelm H Kirschbaum"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/floatpays/spreadsheet"}
+      links: %{"GitHub" => @github_url}
     ]
   end
 
