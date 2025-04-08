@@ -16,14 +16,12 @@ defmodule Spreadsheet.MixProject do
     ]
   end
 
-  # Run "mix help compile.app" to learn about applications.
   def application do
     [
       extra_applications: [:logger]
     ]
   end
 
-  # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
       {:rustler_precompiled, "~> 0.8.1"},
@@ -54,6 +52,6 @@ defmodule Spreadsheet.MixProject do
   end
 
   defp description do
-    "Parses spreadsheet data using Calamine via a Rustler NIF."
+    "Parse Spreadsheet files using Rustler and Calamine."
   end
 end

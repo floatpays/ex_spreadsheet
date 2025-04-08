@@ -2,8 +2,9 @@
 
 <!-- MDOC !-->
 
-Native Implementation Function ( NIF ) bindings for ([Calamine](https://docs.rs/calamine/latest/calamine/)) to read Excel and OpenDocument Spreadsheet files.
+Parse Spreadsheet files using Rustler and [Calamine](https://docs.rs/calamine/latest/calamine/).
 
+File formats supported are .xls, .xla, .xlsx, .xlsm, .xlam, xlsb and .ods.
 
 ## Usage
 
@@ -69,6 +70,10 @@ application env in order to force the build:
 config :rustler_precompiled, :force_build, spreadsheet: true
 ```
 
+## Alternatives
+
+- [XlsxReader](https://hex.pm/packages/xlsx_readerhttps://hex.pm/packages/xlsx_reader)
+- [Xlsxir](https://hex.pm/packages/xlsxir)
 
 ## Development
 
