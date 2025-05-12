@@ -11,6 +11,7 @@ crate-type = ["cdylib"]
 [dependencies]
 calamine = { version = "0.26.1", features = ["dates"]}
 rustler = {version = "0.36.1", features = ["serde"]}
+zip = {version = "2.5.x"}
 chrono = "0.4.40"
 serde = "1.0.219"
 

@@ -26,3 +26,5 @@ spreadsheet-*.tar
 /target/
 
 priv/native/*.so
+
+/native/spreadsheet/target/
