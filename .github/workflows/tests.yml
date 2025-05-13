@@ -14,9 +14,8 @@ jobs:
   tests:
     env:
       MIX_ENV: test
-      MJML_BUILD: true
     runs-on: ubuntu-latest
-    name: "[${{matrix.otp}}/${{matrix.elixir}}] Tests on mjml_nif [OTP/Elixir]"
+    name: "[${{matrix.otp}}/${{matrix.elixir}}] Tests on [OTP/Elixir]"
     strategy:
       fail-fast: false
       # For compatibility between Elixir & Erlang/OTP see
@@ -43,7 +42,7 @@ jobs:
           path: |
             deps
             _build
-            !_build/*/lib/mjml
+            !_build/*/lib/spreadsheet
           key: ${{ runner.os }}[${{ matrix.otp }}/${{ matrix.elixir }}]-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
       - run: mix deps.get
       - run: mix deps.compile
