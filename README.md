@@ -19,7 +19,7 @@ iex> Spreadsheet.sheet_names("test_file_1.xlsx")
 Or from a binary:
 
 ```elixir
-iex> Spreadsheet.sheet_names_from_bianry(File.read!("test_file_1.xlsx"))
+iex> Spreadsheet.sheet_names_from_binary(File.read!("test_file_1.xlsx"))
 
 {:ok, ["sheet1"]}
 ```
@@ -35,7 +35,7 @@ iex> Spreadsheet.parse("test_file_1.xlsx")
 Or from a binary:
 
 ```elixir
-iex> Spreadsheet.parse(File.read!("test_file_1.xlsx"))
+iex> Spreadsheet.parse_from_binary(File.read!("test_file_1.xlsx"))
 
 {:ok, [["row1col1", "row1col2"], ["row2col1", "row2col2"]]}
 ```
