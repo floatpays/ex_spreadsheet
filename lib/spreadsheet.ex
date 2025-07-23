@@ -8,12 +8,18 @@ defmodule Spreadsheet do
   alias Spreadsheet.Calamine
 
   @doc """
-  Returns a list of sheet names.
+  Returns a list of sheet names with options.
+
+  ## Options
+
+    * `:hidden` - When `false`, excludes hidden sheets. Defaults to `true`.
+
   """
-  @spec sheet_names(String.t()) ::
+  @spec sheet_names(String.t(), keyword()) ::
           {:ok, list(String.t())} | {:error, String.t()}
-  def sheet_names(path) when is_binary(path) do
-    Calamine.sheet_names_from_path(path)
+  def sheet_names(path, opts \\ []) when is_binary(path) and is_list(opts) do
+    include_hidden = Keyword.get(opts, :hidden, true)
+    Calamine.sheet_names_from_path(path, include_hidden)
   end
 
   @spec parse(String.t(), binary()) ::
@@ -27,12 +33,19 @@ defmodule Spreadsheet do
   end
 
   @doc """
-  Returns a list of sheet names.
+  Returns a list of sheet names from binary content with options.
+
+  ## Options
+
+    * `:hidden` - When `false`, excludes hidden sheets. Defaults to `true`.
+
   """
-  @spec sheet_names_from_binary(binary()) ::
+  @spec sheet_names_from_binary(binary(), keyword()) ::
           {:ok, list(String.t())} | {:error, String.t()}
-  def sheet_names_from_binary(content) when is_binary(content) do
-    Calamine.sheet_names_from_binary(content)
+  def sheet_names_from_binary(content, opts \\ [])
+      when is_binary(content) and is_list(opts) do
+    include_hidden = Keyword.get(opts, :hidden, true)
+    Calamine.sheet_names_from_binary(content, include_hidden)
   end
 
   @spec parse_from_binary(binary(), binary()) ::

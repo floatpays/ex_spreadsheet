@@ -1,23 +1,46 @@
 use calamine::{
-    open_workbook_auto, open_workbook_auto_from_rs, Data, Reader,
+    open_workbook_auto, open_workbook_auto_from_rs, Data, Reader, SheetVisible,
 };
 use rustler::{Binary, NifTaggedEnum};
 use std::io::Cursor;
 
-#[rustler::nif]
-fn sheet_names_from_binary(content: Binary) -> Result<Vec<String>, String> {
-    let cursor = Cursor::new(content.as_slice());
-
-    open_workbook_auto_from_rs(cursor)
-        .map(|workbook| workbook.sheet_names().to_owned())
-        .map_err(|e| e.to_string())
+fn filter_sheet_names_by_visibility(sheet_names: &[String], sheets_metadata: &[calamine::Sheet], show_hidden: bool) -> Vec<String> {
+    if show_hidden {
+        sheet_names.to_owned()
+    } else {
+        // Filter out hidden sheets using metadata
+        sheets_metadata
+            .iter()
+            .filter(|sheet| sheet.visible == SheetVisible::Visible)
+            .map(|sheet| sheet.name.clone())
+            .collect()
+    }
 }
 
 #[rustler::nif]
-fn sheet_names_from_path(path: &str) -> Result<Vec<String>, String> {
-    open_workbook_auto(path)
-        .map(|workbook| workbook.sheet_names().to_owned())
-        .map_err(|e| e.to_string())
+fn sheet_names_from_binary(content: Binary, show_hidden: bool) -> Result<Vec<String>, String> {
+    let cursor = Cursor::new(content.as_slice());
+
+    match open_workbook_auto_from_rs(cursor) {
+        Ok(workbook) => {
+            let sheet_names = workbook.sheet_names();
+            let sheets_metadata = workbook.sheets_metadata();
+            Ok(filter_sheet_names_by_visibility(&sheet_names, sheets_metadata, show_hidden))
+        }
+        Err(e) => Err(e.to_string())
+    }
+}
+
+#[rustler::nif]
+fn sheet_names_from_path(path: &str, show_hidden: bool) -> Result<Vec<String>, String> {
+    match open_workbook_auto(path) {
+        Ok(workbook) => {
+            let sheet_names = workbook.sheet_names();
+            let sheets_metadata = workbook.sheets_metadata();
+            Ok(filter_sheet_names_by_visibility(&sheet_names, sheets_metadata, show_hidden))
+        }
+        Err(e) => Err(e.to_string())
+    }
 }
 
 #[rustler::nif]

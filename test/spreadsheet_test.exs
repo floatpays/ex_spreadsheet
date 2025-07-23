@@ -16,6 +16,18 @@ defmodule SpreadsheetTest do
       assert Spreadsheet.sheet_names(path) == {:ok, ["Sheet1"]}
     end
 
+    test "ignores hidden sheet names" do
+      path = Path.join(@base_path, "test_file_1_hidden.xlsx")
+
+      assert Spreadsheet.sheet_names(path) == {:ok, ["Sheet2", "Sheet1"]}
+      assert Spreadsheet.sheet_names(path, hidden: false) == {:ok, ["Sheet1"]}
+
+      path = Path.join(@base_path, "test_file_1_hidden_2.xlsx")
+
+      assert Spreadsheet.sheet_names(path) == {:ok, ["Sheet1", "foobar"]}
+      assert Spreadsheet.sheet_names(path, hidden: false) == {:ok, ["Sheet1"]}
+    end
+
     test "gets the sheet_names from a path for xls" do
       path = Path.join(@base_path, "test_file_1.xls")
 
