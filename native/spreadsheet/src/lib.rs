@@ -1,10 +1,12 @@
-use calamine::{
-    open_workbook_auto, open_workbook_auto_from_rs, Data, Reader, SheetVisible,
-};
+use calamine::{open_workbook_auto, open_workbook_auto_from_rs, Data, Reader, SheetVisible};
 use rustler::{Binary, NifTaggedEnum};
 use std::io::Cursor;
 
-fn filter_sheet_names_by_visibility(sheet_names: &[String], sheets_metadata: &[calamine::Sheet], show_hidden: bool) -> Vec<String> {
+fn filter_sheet_names_by_visibility(
+    sheet_names: &[String],
+    sheets_metadata: &[calamine::Sheet],
+    show_hidden: bool,
+) -> Vec<String> {
     if show_hidden {
         sheet_names.to_owned()
     } else {
@@ -25,9 +27,13 @@ fn sheet_names_from_binary(content: Binary, show_hidden: bool) -> Result<Vec<Str
         Ok(workbook) => {
             let sheet_names = workbook.sheet_names();
             let sheets_metadata = workbook.sheets_metadata();
-            Ok(filter_sheet_names_by_visibility(&sheet_names, sheets_metadata, show_hidden))
+            Ok(filter_sheet_names_by_visibility(
+                &sheet_names,
+                sheets_metadata,
+                show_hidden,
+            ))
         }
-        Err(e) => Err(e.to_string())
+        Err(e) => Err(e.to_string()),
     }
 }
 
@@ -37,17 +43,18 @@ fn sheet_names_from_path(path: &str, show_hidden: bool) -> Result<Vec<String>, S
         Ok(workbook) => {
             let sheet_names = workbook.sheet_names();
             let sheets_metadata = workbook.sheets_metadata();
-            Ok(filter_sheet_names_by_visibility(&sheet_names, sheets_metadata, show_hidden))
+            Ok(filter_sheet_names_by_visibility(
+                &sheet_names,
+                sheets_metadata,
+                show_hidden,
+            ))
         }
-        Err(e) => Err(e.to_string())
+        Err(e) => Err(e.to_string()),
     }
 }
 
 #[rustler::nif]
-fn parse_from_path(
-    path: &str,
-    sheet_name: &str,
-) -> Result<Vec<Vec<ColumnData>>, String> {
+fn parse_from_path(path: &str, sheet_name: &str) -> Result<Vec<Vec<ColumnData>>, String> {
     let result = open_workbook_auto(path);
 
     match result {
@@ -65,10 +72,7 @@ fn parse_from_path(
 }
 
 #[rustler::nif]
-fn parse_from_binary(
-    content: Binary,
-    sheet_name: &str,
-) -> Result<Vec<Vec<ColumnData>>, String> {
+fn parse_from_binary(content: Binary, sheet_name: &str) -> Result<Vec<Vec<ColumnData>>, String> {
     let result = open_workbook_auto_from_rs(Cursor::new(content.as_slice()));
 
     match result {
