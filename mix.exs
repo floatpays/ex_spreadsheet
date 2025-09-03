@@ -52,6 +52,6 @@ defmodule Spreadsheet.MixProject do
   end
 
   defp description do
-    "Parse Spreadsheet files using Rustler and Calamine."
+    "Fast, memory-efficient Elixir library for parsing spreadsheet files (.xls, .xlsx, .xlsm, .xlsb, .ods) powered by Rust and Calamine. Features precompiled NIFs, smart type handling, and support for hidden sheets."
   end
 end
