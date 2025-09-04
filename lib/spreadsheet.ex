@@ -1,18 +1,31 @@
 defmodule Spreadsheet do
-  @external_resource "README.md"
-  @moduledoc "README.md"
-             |> File.read!()
-             |> String.split("<!-- MDOC !-->")
-             |> Enum.fetch!(1)
+  @moduledoc """
+  A fast, memory-efficient Elixir library for parsing spreadsheet files.
+
+  This library provides a simple API for working with Excel (.xlsx, .xls) and
+  LibreOffice (.ods) files. It's powered by Rust and Calamine for high-performance
+  parsing.
+
+  ## Features
+
+  - Fast performance with native Rust implementation
+  - Support for multiple formats: .xls, .xla, .xlsx, .xlsm, .xlam, .xlsb, and .ods
+  - Memory efficient parsing from file paths or binary content
+  - Sheet management with support for hidden sheets
+  - Smart type handling with automatic date and number conversion
+  """
 
   alias Spreadsheet.Calamine
 
   @doc """
-  Returns a list of sheet names with options.
+  Returns a list of sheet names from a spreadsheet file.
+
+  Supports Excel (.xlsx, .xls) and LibreOffice (.ods) file formats.
 
   ## Options
 
     * `:hidden` - When `false`, excludes hidden sheets. Defaults to `true`.
+
 
   """
   @spec sheet_names(String.t(), keyword()) ::
@@ -22,6 +35,17 @@ defmodule Spreadsheet do
     Calamine.sheet_names_from_path(path, include_hidden)
   end
 
+  @doc """
+  Parses a specific sheet from a spreadsheet file.
+
+  Returns the sheet data as a list of lists, where each inner list represents a row.
+  The first row typically contains headers.
+
+  Dates are automatically parsed to `NaiveDateTime` when possible, and empty cells
+  are converted to `nil`.
+
+
+  """
   @spec parse(String.t(), binary()) ::
           {:ok, list()} | {:error, binary()}
   def parse(path, sheet_name) do
@@ -33,11 +57,15 @@ defmodule Spreadsheet do
   end
 
   @doc """
-  Returns a list of sheet names from binary content with options.
+  Returns a list of sheet names from spreadsheet binary content.
+
+  This function is useful when you have the spreadsheet content in memory
+  rather than as a file on disk.
 
   ## Options
 
     * `:hidden` - When `false`, excludes hidden sheets. Defaults to `true`.
+
 
   """
   @spec sheet_names_from_binary(binary(), keyword()) ::
@@ -48,6 +76,18 @@ defmodule Spreadsheet do
     Calamine.sheet_names_from_binary(content, include_hidden)
   end
 
+  @doc """
+  Parses a specific sheet from spreadsheet binary content.
+
+  This function is useful when you have the spreadsheet content in memory
+  rather than as a file on disk. Returns the sheet data as a list of lists,
+  where each inner list represents a row.
+
+  Dates are automatically parsed to `NaiveDateTime` when possible, and empty cells
+  are converted to `nil`.
+
+
+  """
   @spec parse_from_binary(binary(), binary()) ::
           {:ok, list()} | {:error, String.t()}
   def parse_from_binary(content, sheet_name) do

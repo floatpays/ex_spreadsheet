@@ -1,5 +1,6 @@
 defmodule SpreadsheetTest do
   use ExUnit.Case
+  doctest Spreadsheet
 
   @base_path Path.join(__DIR__, "/files")
 
