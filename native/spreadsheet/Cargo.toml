@@ -9,10 +9,10 @@ name = "spreadsheet"
 crate-type = ["cdylib"]
 
 [dependencies]
-calamine = { version = "0.30.0", features = ["dates"]}
-rustler = {version = "0.36.2", features = ["serde"]}
-chrono = "0.4.41"
-serde = "1.0.219"
+calamine = { version = "0.31.0", features = ["chrono"]}
+rustler = {version = "0.37.0", features = ["serde"]}
+chrono = "0.4.42"
+serde = "1.0.228"
 
 [features]
 default = ["nif_version_2_15"]
