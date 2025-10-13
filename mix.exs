@@ -25,7 +25,7 @@ defmodule Spreadsheet.MixProject do
   defp deps do
     [
       {:rustler_precompiled, "~> 0.8.1"},
-      {:rustler, "~> 0.36.1", runtime: false, optional: true},
+      {:rustler, "~> 0.37.1", runtime: false, optional: true},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:igniter, "~> 0.5", only: [:dev, :test]},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
