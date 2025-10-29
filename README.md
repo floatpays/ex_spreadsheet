@@ -46,7 +46,7 @@ iex> Spreadsheet.sheet_names("workbook.xlsx", hidden: false)
 Parse a specific sheet by name from a file:
 
 ```elixir
-iex> Spreadsheet.parse("sales.xlsx", "Q1 Data")
+iex> Spreadsheet.parse("sales.xlsx", sheet: "Q1 Data")
 {:ok, [
   ["Product", "Sales", "Date"],
   ["Widget A", 1500.0, ~N[2024-01-15 00:00:00]],
@@ -54,15 +54,38 @@ iex> Spreadsheet.parse("sales.xlsx", "Q1 Data")
 ]}
 ```
 
+Parse all sheets from a file (returns a list of `{sheet_name, sheet_data}` tuples in order):
+
+```elixir
+iex> Spreadsheet.parse("sales.xlsx")
+{:ok, [
+  {"Q1 Data", [
+    ["Product", "Sales", "Date"],
+    ["Widget A", 1500.0, ~N[2024-01-15 00:00:00]]
+  ]},
+  {"Q2 Data", [
+    ["Product", "Sales", "Date"],
+    ["Widget B", 2300.0, ~N[2024-04-15 00:00:00]]
+  ]}
+]}
+```
+
 Or from binary content using the `:format` option:
 
 ```elixir
 iex> content = File.read!("sales.xlsx")
-iex> Spreadsheet.parse(content, "Q1 Data", format: :binary)
+iex> Spreadsheet.parse(content, sheet: "Q1 Data", format: :binary)
 {:ok, [
   ["Product", "Sales", "Date"],
   ["Widget A", 1500.0, ~N[2024-01-15 00:00:00]],
   ["Widget B", 2300.0, ~N[2024-01-20 00:00:00]]
+]}
+
+# Parse all sheets from binary
+iex> Spreadsheet.parse(content, format: :binary)
+{:ok, [
+  {"Q1 Data", [...]},
+  {"Q2 Data", [...]}
 ]}
 ```
 

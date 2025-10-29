@@ -61,7 +61,13 @@ defmodule Spreadsheet do
   end
 
   @doc """
-  Parses a specific sheet from a spreadsheet file or binary content.
+  Parses a specific sheet or all sheets from a spreadsheet file or binary content.
+
+  When called without the `:sheet` option, parses all sheets and returns
+  a list of tuples containing `{sheet_name, sheet_data}`.
+
+  When called with the `:sheet` option, parses only the specified sheet and
+  returns its data as a list of lists.
 
   Returns the sheet data as a list of lists, where each inner list represents a row.
   The first row typically contains headers.
@@ -71,47 +77,85 @@ defmodule Spreadsheet do
 
   ## Options
 
+    * `:sheet` - The name of the sheet to parse. If not provided, parses all sheets.
     * `:format` - Specifies the input format. Either `:filename` (default) or `:binary`.
+    * `:hidden` - When `false`, excludes hidden sheets from all-sheets parsing. Defaults to `true`.
 
   ## Examples
 
-      # From a file path (default)
-      Spreadsheet.parse("sales.xlsx", "Q1 Data")
+      # Parse a specific sheet from a file path
+      Spreadsheet.parse("sales.xlsx", sheet: "Q1 Data")
       {:ok, [
         ["Product", "Sales", "Date"],
         ["Widget A", 1500.0, ~N[2024-01-15 00:00:00]]
       ]}
 
-      # From a file path (explicit)
-      Spreadsheet.parse("sales.xlsx", "Q1 Data", format: :filename)
+      # Parse all sheets from a file path
+      Spreadsheet.parse("sales.xlsx")
       {:ok, [
-        ["Product", "Sales", "Date"],
-        ["Widget A", 1500.0, ~N[2024-01-15 00:00:00]]
+        {"Q1 Data", [
+          ["Product", "Sales", "Date"],
+          ["Widget A", 1500.0, ~N[2024-01-15 00:00:00]]
+        ]},
+        {"Q2 Data", [
+          ["Product", "Sales", "Date"],
+          ["Widget B", 2300.0, ~N[2024-04-15 00:00:00]]
+        ]}
       ]}
 
-      # From binary content
+      # Parse all sheets from binary content
       content = File.read!("sales.xlsx")
-      Spreadsheet.parse(content, "Q1 Data", format: :binary)
+      Spreadsheet.parse(content, format: :binary)
       {:ok, [
-        ["Product", "Sales", "Date"],
-        ["Widget A", 1500.0, ~N[2024-01-15 00:00:00]]
+        {"Q1 Data", [...]},
+        {"Q2 Data", [...]}
       ]}
+
+      # Parse all sheets excluding hidden ones
+      Spreadsheet.parse("sales.xlsx", hidden: false)
+      {:ok, [{"Visible Sheet", [...]}]}
+
+      # Parse specific sheet from binary
+      Spreadsheet.parse(content, sheet: "Q1 Data", format: :binary)
+      {:ok, [[...]]}
 
   """
-  @spec parse(binary(), binary(), keyword()) ::
-          {:ok, list()} | {:error, binary()}
-  def parse(path_or_content, sheet_name, opts \\ []) when is_binary(path_or_content) and is_binary(sheet_name) and is_list(opts) do
+  @spec parse(binary(), keyword()) ::
+          {:ok, list() | list({String.t(), list()})} | {:error, binary()}
+  def parse(path_or_content, opts \\ []) when is_binary(path_or_content) and is_list(opts) do
+    sheet_name = Keyword.get(opts, :sheet)
     format = Keyword.get(opts, :format, :filename)
 
-    result = case format do
-      :filename -> Calamine.parse_from_path(path_or_content, sheet_name)
-      :binary -> Calamine.parse_from_binary(path_or_content, sheet_name)
-      other -> {:error, "Invalid format option: #{inspect(other)}. Expected :filename or :binary"}
-    end
+    if sheet_name do
+      # Parse specific sheet
+      result = case format do
+        :filename -> Calamine.parse_from_path(path_or_content, sheet_name)
+        :binary -> Calamine.parse_from_binary(path_or_content, sheet_name)
+        other -> {:error, "Invalid format option: #{inspect(other)}. Expected :filename or :binary"}
+      end
 
-    case result do
-      {:ok, rows} -> {:ok, parse_rows(rows)}
-      other -> other
+      case result do
+        {:ok, rows} -> {:ok, parse_rows(rows)}
+        other -> other
+      end
+    else
+      # Parse all sheets
+      include_hidden = Keyword.get(opts, :hidden, true)
+
+      with {:ok, sheet_names} <- sheet_names(path_or_content, format: format, hidden: include_hidden) do
+        results =
+          Enum.reduce_while(sheet_names, [], fn name, acc ->
+            case parse(path_or_content, sheet: name, format: format) do
+              {:ok, data} -> {:cont, [{name, data} | acc]}
+              {:error, _} = error -> {:halt, error}
+            end
+          end)
+
+        case results do
+          {:error, _} = error -> error
+          sheets -> {:ok, Enum.reverse(sheets)}
+        end
+      end
     end
   end
 
@@ -136,7 +180,7 @@ defmodule Spreadsheet do
   @doc """
   Parses a specific sheet from spreadsheet binary content.
 
-  This function is deprecated. Use `parse/3` with `format: :binary` instead.
+  This function is deprecated. Use `parse/2` with `sheet:` and `format: :binary` options instead.
 
   Returns the sheet data as a list of lists, where each inner list represents a row.
 
@@ -144,11 +188,11 @@ defmodule Spreadsheet do
   are converted to `nil`.
 
   """
-  @deprecated "Use parse/3 with format: :binary instead"
+  @deprecated "Use parse/2 with sheet: and format: :binary options instead"
   @spec parse_from_binary(binary(), binary()) ::
           {:ok, list()} | {:error, String.t()}
   def parse_from_binary(content, sheet_name) do
-    parse(content, sheet_name, format: :binary)
+    parse(content, sheet: sheet_name, format: :binary)
   end
 
   defp parse_rows(rows) do

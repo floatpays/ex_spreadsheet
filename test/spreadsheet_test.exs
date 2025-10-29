@@ -77,13 +77,65 @@ defmodule SpreadsheetTest do
     end
   end
 
-  describe "parse/3" do
+  describe "parse/2 (all sheets)" do
+    test "parses all sheets from a file path" do
+      path = Path.join(@base_path, "test_file_1.xlsx")
+
+      assert {:ok, sheets} = Spreadsheet.parse(path)
+      assert length(sheets) == 1
+      assert [{"Sheet1", [header | _rows]}] = sheets
+      assert header == ["Dates", "Numbers", "Percentages", "Strings"]
+    end
+
+    test "parses all sheets from binary content" do
+      content = File.read!(Path.join(@base_path, "test_file_1.xlsx"))
+
+      assert {:ok, sheets} = Spreadsheet.parse(content, format: :binary)
+      assert length(sheets) == 1
+      assert [{"Sheet1", [header | _rows]}] = sheets
+      assert header == ["Dates", "Numbers", "Percentages", "Strings"]
+    end
+
+    test "parses all sheets excluding hidden ones" do
+      path = Path.join(@base_path, "test_file_1_hidden.xlsx")
+
+      # With hidden sheets
+      assert {:ok, all_sheets} = Spreadsheet.parse(path)
+      assert length(all_sheets) == 2
+      assert [{"Sheet2", _}, {"Sheet1", _}] = all_sheets
+
+      # Without hidden sheets
+      assert {:ok, visible_sheets} = Spreadsheet.parse(path, hidden: false)
+      assert length(visible_sheets) == 1
+      assert [{"Sheet1", _}] = visible_sheets
+    end
+
+    test "parses all sheets from xls file" do
+      path = Path.join(@base_path, "test_file_1.xls")
+
+      assert {:ok, sheets} = Spreadsheet.parse(path)
+      assert length(sheets) == 1
+      assert [{"Sheet1", [header | _rows]}] = sheets
+      assert header == ["Dates", "Numbers", "Percentages", "Strings"]
+    end
+
+    test "parses all sheets from ods file" do
+      path = Path.join(@base_path, "test_file_1.ods")
+
+      assert {:ok, sheets} = Spreadsheet.parse(path)
+      assert length(sheets) == 1
+      assert [{"Sheet1", [header | _rows]}] = sheets
+      assert header == ["Dates", "Numbers", "Percentages", "Strings"]
+    end
+  end
+
+  describe "parse/2 (specific sheet)" do
     test "parses from binary content" do
       content = File.read!(Path.join(@base_path, "test_file_1.xlsx"))
       sheet_name = "Sheet1"
 
       {:ok, [header | rows]} =
-        Spreadsheet.parse(content, sheet_name, format: :binary)
+        Spreadsheet.parse(content, sheet: sheet_name, format: :binary)
 
       assert header == ["Dates", "Numbers", "Percentages", "Strings"]
 
@@ -98,11 +150,11 @@ defmodule SpreadsheetTest do
              ]
     end
 
-    test "parses from path for xls (default)" do
+    test "parses from path for xls" do
       path = Path.join(@base_path, "test_file_1.xls")
       sheet_name = "Sheet1"
 
-      {:ok, [header | rows]} = Spreadsheet.parse(path, sheet_name)
+      {:ok, [header | rows]} = Spreadsheet.parse(path, sheet: sheet_name)
 
       assert header == ["Dates", "Numbers", "Percentages", "Strings"]
 
@@ -122,24 +174,24 @@ defmodule SpreadsheetTest do
              ]
     end
 
-    test "parses from path (default)" do
+    test "parses from path" do
       path = Path.join(@base_path, "test_file_1.xlsx")
       sheet_name = "Sheet1"
 
-      assert {:ok, _} = Spreadsheet.parse(path, sheet_name)
+      assert {:ok, _} = Spreadsheet.parse(path, sheet: sheet_name)
     end
 
-    test "parses from path (explicit)" do
+    test "parses from path with explicit format" do
       path = Path.join(@base_path, "test_file_1.xlsx")
       sheet_name = "Sheet1"
 
-      assert {:ok, _} = Spreadsheet.parse(path, sheet_name, format: :filename)
+      assert {:ok, _} = Spreadsheet.parse(path, sheet: sheet_name, format: :filename)
     end
 
     test "parses xls files from binary content" do
       content = File.read!(Path.join(@base_path, "test_file_1.xls"))
 
-      assert Spreadsheet.parse(content, "Sheet1", format: :binary) == {
+      assert Spreadsheet.parse(content, sheet: "Sheet1", format: :binary) == {
                :ok,
                [
                  ["Dates", "Numbers", "Percentages", "Strings"],
@@ -162,7 +214,7 @@ defmodule SpreadsheetTest do
     test "parses ods files from binary content" do
       content = File.read!(Path.join(@base_path, "test_file_1.ods"))
 
-      assert Spreadsheet.parse(content, "Sheet1", format: :binary) ==
+      assert Spreadsheet.parse(content, sheet: "Sheet1", format: :binary) ==
                {
                  :ok,
                  [
@@ -181,7 +233,7 @@ defmodule SpreadsheetTest do
     test "returns error for invalid format option" do
       path = Path.join(@base_path, "test_file_1.xlsx")
 
-      assert Spreadsheet.parse(path, "Sheet1", format: :invalid) ==
+      assert Spreadsheet.parse(path, sheet: "Sheet1", format: :invalid) ==
                {:error, "Invalid format option: :invalid. Expected :filename or :binary"}
     end
   end
