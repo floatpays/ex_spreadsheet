@@ -100,12 +100,26 @@ config :rustler_precompiled, :force_build, spreadsheet: true
 
 ## Performance
 
-ExSpreadsheet is built for performance and handles large files efficiently:
+Spreadsheet is built for performance and handles large files efficiently:
 
 - **Native Speed**: Rust-powered parsing for maximum throughput
 - **Memory Efficient**: Streaming approach minimizes memory usage
 - **Cross-Platform**: Precompiled NIFs for major platforms (Linux, macOS, Windows)
 - **Production Ready**: Battle-tested in high-volume data processing environments
+
+### Benchmarks
+
+Comprehensive benchmarks comparing Spreadsheet against other popular Elixir XLSX libraries show significant performance advantages:
+
+**Small Files (10 rows × 5 columns):**
+- **~11-12x faster** than pure Elixir implementations
+- **~160-600x less memory** usage
+
+**Large Files (10,000 rows × 20 columns):**
+- **~10-20x faster** parsing
+- **~200-1200x less memory** usage
+
+For detailed benchmark results and methodology, see [benchmarks/RESULTS.md](benchmarks/RESULTS.md).
 
 ## Why Spreadsheet?
 
