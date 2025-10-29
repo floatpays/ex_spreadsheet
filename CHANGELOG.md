@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2025-10-29
+
 ### Added
 - **NEW**: `parse/2` now supports parsing all sheets at once when called without the `:sheet` option
   - Returns a list of `{sheet_name, sheet_data}` tuples in sheet order
