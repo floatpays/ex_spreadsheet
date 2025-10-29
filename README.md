@@ -17,18 +17,18 @@ A fast, memory-efficient Elixir library for parsing spreadsheet files powered by
 
 ### Getting Sheet Names
 
-List all sheet names in a file:
+List all sheet names from a file:
 
 ```elixir
 iex> Spreadsheet.sheet_names("financial_data.xlsx")
 {:ok, ["Q1 Revenue", "Q2 Revenue", "Summary"]}
 ```
 
-Or from binary content:
+Or from binary content using the `:format` option:
 
 ```elixir
 iex> content = File.read!("financial_data.xlsx")
-iex> Spreadsheet.sheet_names_from_binary(content)
+iex> Spreadsheet.sheet_names(content, format: :binary)
 {:ok, ["Q1 Revenue", "Q2 Revenue", "Summary"]}
 ```
 
@@ -43,7 +43,7 @@ iex> Spreadsheet.sheet_names("workbook.xlsx", hidden: false)
 
 ### Parsing Sheet Data
 
-Parse a specific sheet by name:
+Parse a specific sheet by name from a file:
 
 ```elixir
 iex> Spreadsheet.parse("sales.xlsx", "Q1 Data")
@@ -54,11 +54,11 @@ iex> Spreadsheet.parse("sales.xlsx", "Q1 Data")
 ]}
 ```
 
-Or from binary content:
+Or from binary content using the `:format` option:
 
 ```elixir
 iex> content = File.read!("sales.xlsx")
-iex> Spreadsheet.parse_from_binary(content, "Q1 Data")
+iex> Spreadsheet.parse(content, "Q1 Data", format: :binary)
 {:ok, [
   ["Product", "Sales", "Date"],
   ["Widget A", 1500.0, ~N[2024-01-15 00:00:00]],
