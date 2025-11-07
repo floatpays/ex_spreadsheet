@@ -49,14 +49,21 @@ defmodule Spreadsheet do
   """
   @spec sheet_names(binary(), keyword()) ::
           {:ok, list(String.t())} | {:error, String.t()}
-  def sheet_names(path_or_content, opts \\ []) when is_binary(path_or_content) and is_list(opts) do
+  def sheet_names(path_or_content, opts \\ [])
+      when is_binary(path_or_content) and is_list(opts) do
     format = Keyword.get(opts, :format, :filename)
     include_hidden = Keyword.get(opts, :hidden, true)
 
     case format do
-      :filename -> Calamine.sheet_names_from_path(path_or_content, include_hidden)
-      :binary -> Calamine.sheet_names_from_binary(path_or_content, include_hidden)
-      other -> {:error, "Invalid format option: #{inspect(other)}. Expected :filename or :binary"}
+      :filename ->
+        Calamine.sheet_names_from_path(path_or_content, include_hidden)
+
+      :binary ->
+        Calamine.sheet_names_from_binary(path_or_content, include_hidden)
+
+      other ->
+        {:error,
+         "Invalid format option: #{inspect(other)}. Expected :filename or :binary"}
     end
   end
 
@@ -122,17 +129,25 @@ defmodule Spreadsheet do
   """
   @spec parse(binary(), keyword()) ::
           {:ok, list() | list({String.t(), list()})} | {:error, binary()}
-  def parse(path_or_content, opts \\ []) when is_binary(path_or_content) and is_list(opts) do
+  def parse(path_or_content, opts \\ [])
+      when is_binary(path_or_content) and is_list(opts) do
     sheet_name = Keyword.get(opts, :sheet)
     format = Keyword.get(opts, :format, :filename)
 
     if sheet_name do
       # Parse specific sheet
-      result = case format do
-        :filename -> Calamine.parse_from_path(path_or_content, sheet_name)
-        :binary -> Calamine.parse_from_binary(path_or_content, sheet_name)
-        other -> {:error, "Invalid format option: #{inspect(other)}. Expected :filename or :binary"}
-      end
+      result =
+        case format do
+          :filename ->
+            Calamine.parse_from_path(path_or_content, sheet_name)
+
+          :binary ->
+            Calamine.parse_from_binary(path_or_content, sheet_name)
+
+          other ->
+            {:error,
+             "Invalid format option: #{inspect(other)}. Expected :filename or :binary"}
+        end
 
       case result do
         {:ok, rows} -> {:ok, parse_rows(rows)}
@@ -142,7 +157,11 @@ defmodule Spreadsheet do
       # Parse all sheets
       include_hidden = Keyword.get(opts, :hidden, true)
 
-      with {:ok, sheet_names} <- sheet_names(path_or_content, format: format, hidden: include_hidden) do
+      with {:ok, sheet_names} <-
+             sheet_names(path_or_content,
+               format: format,
+               hidden: include_hidden
+             ) do
         results =
           Enum.reduce_while(sheet_names, [], fn name, acc ->
             case parse(path_or_content, sheet: name, format: format) do

@@ -8,7 +8,8 @@ defmodule SpreadsheetTest do
     test "gets the sheet_names from binary content" do
       content = File.read!(Path.join(@base_path, "test_file_1.xlsx"))
 
-      assert Spreadsheet.sheet_names(content, format: :binary) == {:ok, ["Sheet1"]}
+      assert Spreadsheet.sheet_names(content, format: :binary) ==
+               {:ok, ["Sheet1"]}
     end
 
     test "gets the sheet_names from a path (default)" do
@@ -20,7 +21,8 @@ defmodule SpreadsheetTest do
     test "gets the sheet_names from a path (explicit)" do
       path = Path.join(@base_path, "test_file_1.xlsx")
 
-      assert Spreadsheet.sheet_names(path, format: :filename) == {:ok, ["Sheet1"]}
+      assert Spreadsheet.sheet_names(path, format: :filename) ==
+               {:ok, ["Sheet1"]}
     end
 
     test "ignores hidden sheet names" do
@@ -65,7 +67,8 @@ defmodule SpreadsheetTest do
       path = Path.join(@base_path, "test_file_1.xlsx")
 
       assert Spreadsheet.sheet_names(path, format: :invalid) ==
-               {:error, "Invalid format option: :invalid. Expected :filename or :binary"}
+               {:error,
+                "Invalid format option: :invalid. Expected :filename or :binary"}
     end
   end
 
@@ -185,7 +188,8 @@ defmodule SpreadsheetTest do
       path = Path.join(@base_path, "test_file_1.xlsx")
       sheet_name = "Sheet1"
 
-      assert {:ok, _} = Spreadsheet.parse(path, sheet: sheet_name, format: :filename)
+      assert {:ok, _} =
+               Spreadsheet.parse(path, sheet: sheet_name, format: :filename)
     end
 
     test "parses xls files from binary content" do
@@ -234,7 +238,8 @@ defmodule SpreadsheetTest do
       path = Path.join(@base_path, "test_file_1.xlsx")
 
       assert Spreadsheet.parse(path, sheet: "Sheet1", format: :invalid) ==
-               {:error, "Invalid format option: :invalid. Expected :filename or :binary"}
+               {:error,
+                "Invalid format option: :invalid. Expected :filename or :binary"}
     end
   end
 
@@ -242,7 +247,9 @@ defmodule SpreadsheetTest do
     test "still works for backwards compatibility" do
       content = File.read!(Path.join(@base_path, "test_file_1.xlsx"))
 
-      assert {:ok, [header | _rows]} = Spreadsheet.parse_from_binary(content, "Sheet1")
+      assert {:ok, [header | _rows]} =
+               Spreadsheet.parse_from_binary(content, "Sheet1")
+
       assert header == ["Dates", "Numbers", "Percentages", "Strings"]
     end
   end
