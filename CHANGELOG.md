@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.2] - 2025-11-24
+
+### Updated
+- Updated Rust dependencies in native spreadsheet module:
+  - [calamine](https://github.com/tafia/calamine/blob/master/CHANGELOG.md) 0.31.0 → 0.32.0
+
 ## [0.4.1] - 2025-11-17
 
 ### Changed
