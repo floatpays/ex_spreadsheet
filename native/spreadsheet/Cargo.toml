@@ -9,7 +9,7 @@ name = "spreadsheet"
 crate-type = ["cdylib"]
 
 [dependencies]
-calamine = { version = "0.31.0", features = ["chrono"]}
+calamine = { version = "0.32.0", features = ["chrono"]}
 rustler = {version = "0.37.0", features = ["serde"]}
 chrono = "0.4.42"
 serde = "1.0.228"
