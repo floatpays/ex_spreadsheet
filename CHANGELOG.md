@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.3] - 2025-12-05
+
+### Updated
+- Updated Rust dependencies:
+  - [rustler](https://github.com/rusterlium/rustler/blob/master/CHANGELOG.md) 0.37.0 → 0.37.2
+
 ## [0.4.2] - 2025-11-24
 
 ### Updated
