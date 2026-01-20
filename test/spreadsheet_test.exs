@@ -72,14 +72,6 @@ defmodule SpreadsheetTest do
     end
   end
 
-  describe "sheet_names_from_binary/2 (deprecated)" do
-    test "still works for backwards compatibility" do
-      content = File.read!(Path.join(@base_path, "test_file_1.xlsx"))
-
-      assert Spreadsheet.sheet_names_from_binary(content) == {:ok, ["Sheet1"]}
-    end
-  end
-
   describe "parse/2 (all sheets)" do
     test "parses all sheets from a file path" do
       path = Path.join(@base_path, "test_file_1.xlsx")
@@ -243,14 +235,4 @@ defmodule SpreadsheetTest do
     end
   end
 
-  describe "parse_from_binary/2 (deprecated)" do
-    test "still works for backwards compatibility" do
-      content = File.read!(Path.join(@base_path, "test_file_1.xlsx"))
-
-      assert {:ok, [header | _rows]} =
-               Spreadsheet.parse_from_binary(content, "Sheet1")
-
-      assert header == ["Dates", "Numbers", "Percentages", "Strings"]
-    end
-  end
 end
