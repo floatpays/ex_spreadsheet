@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.7] - 2026-03-18
+
+### Updated
+- Updated Rust dependencies:
+  - [calamine](https://github.com/tafia/calamine/blob/master/CHANGELOG.md) 0.33.0 → 0.34.0
+    - Performance improvements: cell reader buffer reuse, optimised XLS sector chain reads, cached path/attr lookups, minimised allocations
+    - Bug fixes: capitalized workbook/book stream handling in XLS, BIFF5 record parsing, empty `<v/>` values in XLSX, millisecond rounding
+  - [rustler](https://github.com/rusterlium/rustler/blob/master/CHANGELOG.md) 0.37.2 → 0.37.3
+
 ## [0.4.6] - 2026-03-02
 
 ### Updated

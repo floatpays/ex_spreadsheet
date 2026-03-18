@@ -2,7 +2,7 @@ defmodule Spreadsheet.MixProject do
   use Mix.Project
 
   @github_url "https://github.com/floatpays/ex_spreadsheet"
-  @version "0.4.6"
+  @version "0.4.7"
 
   def project do
     [
