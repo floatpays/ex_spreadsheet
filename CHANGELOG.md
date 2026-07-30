@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.2] - 2026-07-30
+
+No breaking changes: the public API, supported Elixir requirement (`~> 1.18`)
+and all runtime Elixir dependencies are unchanged. Dependency updates only.
+
+### Updated
+- Updated Rust dependencies:
+  - [calamine](https://github.com/tafia/calamine/blob/master/Changelog.md) 0.36.0 → 0.36.1
+    - Bug fixes only: fixed a 0.36.0 regression that broke Strict OOXML
+      (ISO/IEC 29500) `_rels/.rels` links, fixed XLSB parsing of unhandled
+      workbook-global records (previously could silently drop a worksheet or
+      panic), and XLS string cells now preserve empty strings instead of
+      discarding them.
+  - [serde](https://github.com/serde-rs/serde/releases) 1.0.228 → 1.0.229
+  - Updated transitive Rust dependencies (`cc`, `futures-core`, `futures-task`,
+    `futures-util`, `libc`, `proc-macro2`, `quote`, `syn`)
+- Updated Elixir dev/test dependencies (no runtime deps changed):
+  `igniter` 0.8.2 → 0.8.3, `ex_ast` 0.12.10 → 0.13.1, `glob_ex` 0.1.11 →
+  0.1.12, `req` 0.6.3 → 0.7.1
+
 ## [0.6.1] - 2026-07-17
 
 No breaking changes: the public API, supported Elixir requirement (`~> 1.18`)
