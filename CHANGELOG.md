@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.3] - 2026-08-25
+
+No breaking changes: the public API, supported Elixir requirement (`~> 1.18`)
+and all runtime Elixir dependencies are unchanged. Dependency updates only.
+
+### Updated
+- Updated transitive Rust dependencies (`android_system_properties`, `cc`,
+  `crc32fast`, `fast-float2`, `find-msvc-tools`, `futures-core`,
+  `futures-task`, `futures-util`, `js-sys`, `log`, `syn`, `wasm-bindgen`,
+  `wasm-bindgen-macro`, `wasm-bindgen-macro-support`, `wasm-bindgen-shared`,
+  `zlib-rs`). The direct Rust dependencies (`calamine` 0.36.1, `rustler`
+  0.38.0, `chrono` 0.4.45, `serde` 1.0.229) were already at their latest
+  releases and are unchanged.
+  - Verified parsing is unaffected: every fixture in `test/files` (`.ods`,
+    `.xls`, `.xlsx` and both hidden-sheet variants) was parsed before and
+    after the update via `sheet_names/2`, `sheet_names_from_binary/2`,
+    `parse/2` and `parse_from_binary/2`, producing identical results.
+- Updated Elixir dev/test dependencies (no runtime deps changed):
+  `earmark_parser` 1.4.45 → 1.4.46, `req` 0.7.1 → 0.7.3, `spitfire` 0.3.13
+  → 0.4.0. Dropped the stale `castore` lock entry, which no environment
+  resolved.
+
 ## [0.6.2] - 2026-07-30
 
 No breaking changes: the public API, supported Elixir requirement (`~> 1.18`)
