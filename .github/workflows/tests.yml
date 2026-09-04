@@ -37,7 +37,7 @@ jobs:
             elixir: 1.20.2
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: dtolnay/rust-toolchain@stable
@@ -49,7 +49,7 @@ jobs:
           elixir-version: ${{matrix.elixir}}
       - name: Cache hex deps
         id: mix-cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             deps
